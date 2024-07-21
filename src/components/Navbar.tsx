@@ -1,4 +1,4 @@
-// import { useState } from "react";
+import { Link } from "react-router-dom";
 
 interface Props {
   onChange: (value: string) => void;
@@ -8,8 +8,18 @@ interface Props {
 const Navbar: React.FC<Props> = ({ onChange, onSearch }) => {
   return (
     <div className="w-full  justify-between p-4 flex bg-[#242424]  ">
-      <div className="!bg-amber-400  text-black font-bold p-2 rounded-md">
-        <h1 className="">Movie React</h1>
+      <div className="flex items-center gap-4">
+        <Link to="/">
+          <div className="!bg-amber-400  text-black font-bold p-2 rounded-md">
+            <h1 className="">Movie React</h1>
+          </div>
+        </Link>
+
+        <Link to="/favorite">
+          <div className=" text-white font-bold p-2 rounded-md">
+            <h1 className="">WatchList</h1>
+          </div>
+        </Link>
       </div>
 
       <div className="relative w-[200px]">

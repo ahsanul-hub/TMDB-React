@@ -1,35 +1,29 @@
-import { useState, useEffect } from "react";
 import { Movie } from "../App";
-import { imageURL } from "./Home";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Favorite: React.FC = () => {
-  const [favoriteMovies, setFavoriteMovies] = useState<Movie[]>([]);
+interface Props {
+  movies: Movie[];
+}
 
-  const handleGetFavoriteMovies = () => {
+export const imageURL = "https://image.tmdb.org/t/p/w500";
+
+const Home: React.FC<Props> = ({ movies }) => {
+  const handleAddFavorite = (movie: Movie) => {
     const favoriteMovies = JSON.parse(
       localStorage.getItem("favoriteMovies") || "[]"
     );
-    setFavoriteMovies(favoriteMovies);
-  };
-
-  useEffect(() => {
-    handleGetFavoriteMovies();
-  }, []);
-
-  const handleDeleteFavorite = (id: number) => {
-    const updatedFavorites = favoriteMovies.filter((movie) => movie.id !== id);
-    setFavoriteMovies(updatedFavorites);
+    const updatedFavorites = [...favoriteMovies, movie];
     localStorage.setItem("favoriteMovies", JSON.stringify(updatedFavorites));
-    toast.success("Movie removed from watchlist!");
+    toast.success("Movie added to watchlist!");
   };
 
   return (
     <div className="flex gap-6 flex-wrap items-center justify-center">
       <ToastContainer />
-      {favoriteMovies.length !== 0
-        ? favoriteMovies.map((movie) => (
+      {movies.length !== 0
+        ? movies.map((movie) => (
             <div
               key={movie.id}
               className="relative flex flex-col mt-6 text-gray-700 bg-gray-800 shadow-md bg-clip-border rounded-xl w-96"
@@ -45,13 +39,13 @@ const Favorite: React.FC = () => {
                   {movie.overview}
                 </p>
               </div>
-              <div className="p-6 pt-0 flex justify-between">
+              <div className="p-6 pt-0">
                 <button
-                  className="align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg bg-red-600 text-white shadow-md shadow-red-600/10 hover:shadow-lg hover:shadow-red-600/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none"
+                  className="align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg bg-gray-900 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none"
                   type="button"
-                  onClick={() => handleDeleteFavorite(movie.id)}
+                  onClick={() => handleAddFavorite(movie)}
                 >
-                  Delete
+                  Add Watchlist
                 </button>
               </div>
             </div>
@@ -61,4 +55,4 @@ const Favorite: React.FC = () => {
   );
 };
 
-export default Favorite;
+export default Home;
