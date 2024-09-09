@@ -1,21 +1,28 @@
 import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import "./App.css";
-import { getMovieList, getSearchMovie } from "./api";
+import { getMoviePlaying, getSearchMovie } from "./api";
 import { Route, Routes } from "react-router-dom";
 import Home from "./components/Home";
 import Favorite from "./components/Favorite";
+import Watchlist from "./components/Watchlist";
+import MovieDetail from "./components/MovieDetail";
 
 export interface Movie {
   id: number;
   title: string;
   overview: string;
+  release_date: number;
   poster_path: string;
+  tagline: string;
+  genres: string;
+  backdrop_path: string;
+  runtime: number;
 }
 
 function App() {
   const [searchValue, setSearchValue] = useState("");
-  const [movies, setMovies] = useState<Movie[]>([]);
+  const [movies, setMovies] = useState<Movie[] | null>([]);
   const [debounceTimeout, setDebounceTimeout] = useState<number | null>(null);
 
   const searchMovie = async () => {
@@ -26,7 +33,7 @@ function App() {
   };
 
   const fetchMovies = async () => {
-    const data = await getMovieList();
+    const data = await getMoviePlaying();
     setMovies(data);
   };
 
@@ -58,8 +65,10 @@ function App() {
     <div className="w-full">
       <Navbar onChange={handleChange} onSearch={handleSearch} />
       <Routes>
-        <Route path="/" element={<Home movies={movies} />} />
+        <Route path="/" element={<Home movies={movies as Movie[]} />} />
         <Route path="/favorite" element={<Favorite />} />
+        <Route path="/watchlist" element={<Watchlist />} />
+        <Route path="/movie/:id" element={<MovieDetail />} />
       </Routes>
     </div>
   );
